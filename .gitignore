@@ -1,0 +1,12 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/ExchangeRatesETL/APIKey.txt
+/ExchangeRatesDatabase/Import Schema Logs
+/ExchangeRatesDatabase/obj/Debug
+/ExchangeRatesDatabase/ExchangeRatesDatabase.jfm
+*.user
+/ExchangeRatesETL/bin/Development
+/ExchangeRatesETL/obj/Development

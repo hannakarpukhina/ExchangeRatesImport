@@ -1,0 +1,836 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="5/13/2021 5:23:00 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="DESKTOP-8Q7FPL1"
+  DTS:CreatorName="DESKTOP-8Q7FPL1\admin"
+  DTS:DTSID="{7B63BB44-2C0B-4412-8676-D1DFFA11E58F}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.2000.166"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="Package1"
+  DTS:PackageType="5"
+  DTS:VersionBuild="6"
+  DTS:VersionGUID="{1CAFCE4B-C7A2-45C5-ABEB-5812670F178C}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[LocalHost.WorkFlow]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{2A37A34E-04BA-4704-97B3-CA839FC7FDEA}"
+      DTS:ObjectName="LocalHost.WorkFlow">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=.;Initial Catalog=WorkFlow;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\dim Currency"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{CEAF2405-4DE0-456E-975F-0119B2F86EB0}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="dim Currency"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\dim Currency\dim Currency"
+              componentClassID="Microsoft.OLEDBCommand"
+              contactInfo="OLE DB Command;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;2"
+              description="Runs an SQL statement for each row in a data flow. For example, call a 'new employee setup' stored procedure for each row in the 'new employees' table. Note: running an SQL statement for each row of a large data flow may take a long time."
+              name="dim Currency"
+              usesDispositions="true"
+              version="2">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SET IDENTITY_INSERT dim.Currency ON
+INSERT INTO dim.Currency (CurrencyId, CurrencyCodeISO3,CurrencyCodeISO2, StartDate, CountryName) 
+SELECT DISTINCT
+	 stage2.CurrencyId
+	,stage2.CurrencyCodeISO3
+	,stage2.CurrencyCodeISO2
+	,stage2.StartDate
+	,stage2.CountryName
+FROM [stage2].[Currency] stage2
+	LEFT OUTER JOIN [dim].[Currency] dim ON dim.CurrencyId = stage2.CurrencyId
+WHERE dim.CurrencyId IS NULL
+
+SET IDENTITY_INSERT dim.Currency OFF</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\dim Currency\dim Currency.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\dim Currency\dim Currency.Inputs[OLE DB Command Input]"
+                  errorOrTruncationOperation="Command Execution"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Command Input">
+                  <externalMetadataColumns
+                    isUsed="True" />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\dim Currency\dim Currency.Outputs[OLE DB Command Output]"
+                  exclusionGroup="1"
+                  name="OLE DB Command Output"
+                  synchronousInputId="Package\dim Currency\dim Currency.Inputs[OLE DB Command Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\dim Currency\dim Currency.Outputs[OLE DB Command Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Command Error Output"
+                  synchronousInputId="Package\dim Currency\dim Currency.Inputs[OLE DB Command Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\dim Currency\dim Currency.Outputs[OLE DB Command Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\dim Currency\dim Currency.Outputs[OLE DB Command Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\dim Currency\dim Currency.Outputs[OLE DB Command Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\dim Currency\dim Currency.Outputs[OLE DB Command Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\dim Currency\stage2 Currency"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="stage2 Currency"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[stage2].[Currency]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT DISTINCT
+	 stage2.CurrencyId
+	,stage2.CurrencyCodeISO3
+	,stage2.CurrencyCodeISO2
+	,stage2.StartDate
+	,stage2.CountryName
+FROM [stage2].[Currency] stage2
+	LEFT OUTER JOIN [dim].[Currency] dim ON dim.CurrencyId = stage2.CurrencyId
+WHERE dim.CurrencyId IS NULL</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\dim Currency\stage2 Currency.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].Columns[CurrencyId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].ExternalColumns[CurrencyId]"
+                      lineageId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].Columns[CurrencyId]"
+                      name="CurrencyId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].Columns[CurrencyCodeISO3]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].ExternalColumns[CurrencyCodeISO3]"
+                      length="3"
+                      lineageId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].Columns[CurrencyCodeISO3]"
+                      name="CurrencyCodeISO3"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].Columns[CurrencyCodeISO2]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].ExternalColumns[CurrencyCodeISO2]"
+                      length="2"
+                      lineageId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].Columns[CurrencyCodeISO2]"
+                      name="CurrencyCodeISO2"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].Columns[StartDate]"
+                      dataType="dbTimeStamp2"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].ExternalColumns[StartDate]"
+                      lineageId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].Columns[StartDate]"
+                      name="StartDate"
+                      scale="7"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].Columns[CountryName]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].ExternalColumns[CountryName]"
+                      length="1000"
+                      lineageId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].Columns[CountryName]"
+                      name="CountryName"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].ExternalColumns[CurrencyId]"
+                      dataType="i4"
+                      name="CurrencyId" />
+                    <externalMetadataColumn
+                      refId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].ExternalColumns[CurrencyCodeISO3]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="CurrencyCodeISO3" />
+                    <externalMetadataColumn
+                      refId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].ExternalColumns[CurrencyCodeISO2]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      name="CurrencyCodeISO2" />
+                    <externalMetadataColumn
+                      refId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].ExternalColumns[StartDate]"
+                      dataType="dbTimeStamp2"
+                      name="StartDate"
+                      scale="7" />
+                    <externalMetadataColumn
+                      refId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output].ExternalColumns[CountryName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1000"
+                      name="CountryName" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Error Output].Columns[CurrencyId]"
+                      dataType="i4"
+                      lineageId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Error Output].Columns[CurrencyId]"
+                      name="CurrencyId" />
+                    <outputColumn
+                      refId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Error Output].Columns[CurrencyCodeISO3]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      lineageId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Error Output].Columns[CurrencyCodeISO3]"
+                      name="CurrencyCodeISO3" />
+                    <outputColumn
+                      refId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Error Output].Columns[CurrencyCodeISO2]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      lineageId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Error Output].Columns[CurrencyCodeISO2]"
+                      name="CurrencyCodeISO2" />
+                    <outputColumn
+                      refId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Error Output].Columns[StartDate]"
+                      dataType="dbTimeStamp2"
+                      lineageId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Error Output].Columns[StartDate]"
+                      name="StartDate"
+                      scale="7" />
+                    <outputColumn
+                      refId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Error Output].Columns[CountryName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1000"
+                      lineageId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Error Output].Columns[CountryName]"
+                      name="CountryName" />
+                    <outputColumn
+                      refId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\dim Currency.Paths[OLE DB Source Output]"
+              endId="Package\dim Currency\dim Currency.Inputs[OLE DB Command Input]"
+              name="OLE DB Source Output"
+              startId="Package\dim Currency\stage2 Currency.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\sales ExchangeRate"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{2573E4B3-7B01-46F9-AEC7-CD4D2495DC25}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="sales ExchangeRate"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\sales ExchangeRate\sales ExchangeRate"
+              componentClassID="Microsoft.OLEDBCommand"
+              contactInfo="OLE DB Command;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;2"
+              description="Runs an SQL statement for each row in a data flow. For example, call a 'new employee setup' stored procedure for each row in the 'new employees' table. Note: running an SQL statement for each row of a large data flow may take a long time."
+              name="sales ExchangeRate"
+              usesDispositions="true"
+              version="2">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">MERGE [sales].[ExchangeRate] AS trg 
+    USING (SELECT  
+			 stage2.CurrencyId
+			,stage2.EffectiveDate
+			,stage2.BaseCurrencyId
+			,stage2.Rate
+			,stage2.[Timestamp]
+			,stage2.InsertedDate
+		FROM (
+				SELECT
+					 CurrencyId
+					,EffectiveDate
+					,BaseCurrencyId
+					,Rate
+					,[Timestamp]
+					,InsertedDate
+					,ROW_NUMBER() OVER(PARTITION BY CurrencyId, EffectiveDate ORDER BY [Timestamp] DESC) AS LastRate
+				FROM stage2.ExchangeRate
+			 ) stage2
+			LEFT OUTER JOIN sales.ExchangeRate sales ON sales.CurrencyId = stage2.CurrencyId
+													AND sales.EffectiveDate = stage2.EffectiveDate
+		WHERE sales.CurrencyId IS NULL 
+			AND stage2.LastRate = 1) AS srs
+ON (srs.CurrencyId = trg.CurrencyId AND srs.EffectiveDate = trg.EffectiveDate)
+WHEN MATCHED
+    THEN UPDATE SET 
+       trg.Rate = srs.Rate,
+       trg.[Timestamp] = srs.[Timestamp]
+WHEN NOT MATCHED 
+    THEN INSERT (CurrencyId, EffectiveDate, BaseCurrencyId, Rate, [Timestamp], InsertedDate)
+	VALUES (srs.CurrencyId, srs.EffectiveDate, srs.BaseCurrencyId, srs.Rate, srs.[Timestamp], srs.InsertedDate)
+;
+
+</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\sales ExchangeRate\sales ExchangeRate.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\sales ExchangeRate\sales ExchangeRate.Inputs[OLE DB Command Input]"
+                  errorOrTruncationOperation="Command Execution"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Command Input">
+                  <externalMetadataColumns
+                    isUsed="True" />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\sales ExchangeRate\sales ExchangeRate.Outputs[OLE DB Command Output]"
+                  exclusionGroup="1"
+                  name="OLE DB Command Output"
+                  synchronousInputId="Package\sales ExchangeRate\sales ExchangeRate.Inputs[OLE DB Command Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\sales ExchangeRate\sales ExchangeRate.Outputs[OLE DB Command Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Command Error Output"
+                  synchronousInputId="Package\sales ExchangeRate\sales ExchangeRate.Inputs[OLE DB Command Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\sales ExchangeRate\sales ExchangeRate.Outputs[OLE DB Command Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\sales ExchangeRate\sales ExchangeRate.Outputs[OLE DB Command Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\sales ExchangeRate\sales ExchangeRate.Outputs[OLE DB Command Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\sales ExchangeRate\sales ExchangeRate.Outputs[OLE DB Command Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\sales ExchangeRate\stage2 ExchangeRate"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="stage2 ExchangeRate"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[stage2].[ExchangeRate]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT  
+	 stage2.CurrencyId
+	,stage2.EffectiveDate
+	,stage2.BaseCurrencyId
+	,stage2.Rate
+	,stage2.[Timestamp]
+	,stage2.InsertedDate
+FROM (
+		SELECT
+			 CurrencyId
+			,EffectiveDate
+			,BaseCurrencyId
+			,Rate
+			,[Timestamp]
+			,InsertedDate
+			,ROW_NUMBER() OVER(PARTITION BY CurrencyId, EffectiveDate ORDER BY [Timestamp] DESC) AS LastRate
+		FROM stage2.ExchangeRate
+	 ) stage2
+	LEFT OUTER JOIN sales.ExchangeRate sales ON sales.CurrencyId = stage2.CurrencyId
+											AND sales.EffectiveDate = stage2.EffectiveDate
+WHERE sales.CurrencyId IS NULL 
+	AND stage2.LastRate = 1</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\sales ExchangeRate\stage2 ExchangeRate.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].Columns[CurrencyId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].ExternalColumns[CurrencyId]"
+                      lineageId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].Columns[CurrencyId]"
+                      name="CurrencyId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].Columns[EffectiveDate]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].ExternalColumns[EffectiveDate]"
+                      lineageId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].Columns[EffectiveDate]"
+                      name="EffectiveDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].Columns[BaseCurrencyId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].ExternalColumns[BaseCurrencyId]"
+                      lineageId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].Columns[BaseCurrencyId]"
+                      name="BaseCurrencyId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].Columns[Rate]"
+                      dataType="r4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].ExternalColumns[Rate]"
+                      lineageId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].Columns[Rate]"
+                      name="Rate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].Columns[Timestamp]"
+                      dataType="dbTimeStamp2"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].ExternalColumns[Timestamp]"
+                      lineageId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].Columns[Timestamp]"
+                      name="Timestamp"
+                      scale="7"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].Columns[InsertedDate]"
+                      dataType="dbTimeStamp2"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].ExternalColumns[InsertedDate]"
+                      lineageId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].Columns[InsertedDate]"
+                      name="InsertedDate"
+                      scale="7"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].ExternalColumns[CurrencyId]"
+                      dataType="i4"
+                      name="CurrencyId" />
+                    <externalMetadataColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].ExternalColumns[EffectiveDate]"
+                      dataType="dbDate"
+                      name="EffectiveDate" />
+                    <externalMetadataColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].ExternalColumns[BaseCurrencyId]"
+                      dataType="i4"
+                      name="BaseCurrencyId" />
+                    <externalMetadataColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].ExternalColumns[Rate]"
+                      dataType="r4"
+                      name="Rate" />
+                    <externalMetadataColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].ExternalColumns[Timestamp]"
+                      dataType="dbTimeStamp2"
+                      name="Timestamp"
+                      scale="7" />
+                    <externalMetadataColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output].ExternalColumns[InsertedDate]"
+                      dataType="dbTimeStamp2"
+                      name="InsertedDate"
+                      scale="7" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Error Output].Columns[CurrencyId]"
+                      dataType="i4"
+                      lineageId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Error Output].Columns[CurrencyId]"
+                      name="CurrencyId" />
+                    <outputColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Error Output].Columns[EffectiveDate]"
+                      dataType="dbDate"
+                      lineageId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Error Output].Columns[EffectiveDate]"
+                      name="EffectiveDate" />
+                    <outputColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Error Output].Columns[BaseCurrencyId]"
+                      dataType="i4"
+                      lineageId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Error Output].Columns[BaseCurrencyId]"
+                      name="BaseCurrencyId" />
+                    <outputColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Error Output].Columns[Rate]"
+                      dataType="r4"
+                      lineageId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Error Output].Columns[Rate]"
+                      name="Rate" />
+                    <outputColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Error Output].Columns[Timestamp]"
+                      dataType="dbTimeStamp2"
+                      lineageId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Error Output].Columns[Timestamp]"
+                      name="Timestamp"
+                      scale="7" />
+                    <outputColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Error Output].Columns[InsertedDate]"
+                      dataType="dbTimeStamp2"
+                      lineageId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Error Output].Columns[InsertedDate]"
+                      name="InsertedDate"
+                      scale="7" />
+                    <outputColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\sales ExchangeRate.Paths[OLE DB Source Output]"
+              endId="Package\sales ExchangeRate\sales ExchangeRate.Inputs[OLE DB Command Input]"
+              name="OLE DB Source Output"
+              startId="Package\sales ExchangeRate\stage2 ExchangeRate.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="142.666666666667,42.6666666666667"
+          Id="Package\dim Currency"
+          TopLeft="32.9999995902181,21.9210529406645" />
+        <NodeLayout
+          Size="177.333333333334,42.6666666666667"
+          Id="Package\sales ExchangeRate"
+          TopLeft="200.624997010455,21.8947372542193" />
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\dim Currency">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="157.333333333334,42.6666666666667"
+          Id="Package\dim Currency\stage2 Currency"
+          TopLeft="5.50000000000001,5.50000000000004" />
+        <NodeLayout
+          Size="142.666666666667,42.6666666666667"
+          Id="Package\dim Currency\dim Currency"
+          TopLeft="12.8333333333334,108.166666666667" />
+        <EdgeLayout
+          Id="Package\dim Currency.Paths[OLE DB Source Output]"
+          TopLeft="84.1666666666667,48.1666666666667">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60.0000000000001"
+              Start="0,0"
+              End="0,52.5000000000001">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5000000000001" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\dim Currency\stage2 Currency">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\sales ExchangeRate">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="184,42.6666666666667"
+          Id="Package\sales ExchangeRate\stage2 ExchangeRate"
+          TopLeft="256,67" />
+        <NodeLayout
+          Size="177.333333333334,42.6666666666667"
+          Id="Package\sales ExchangeRate\sales ExchangeRate"
+          TopLeft="267,182" />
+        <EdgeLayout
+          Id="Package\sales ExchangeRate.Paths[OLE DB Source Output]"
+          TopLeft="351.833333333333,109.666666666667">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,72.3333333333333"
+              Start="0,0"
+              End="0,64.8333333333333">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,64.8333333333333" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\sales ExchangeRate\stage2 ExchangeRate">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

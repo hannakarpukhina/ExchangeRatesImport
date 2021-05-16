@@ -1,0 +1,635 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="5/10/2021 5:54:04 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="DESKTOP-8Q7FPL1"
+  DTS:CreatorName="DESKTOP-8Q7FPL1\admin"
+  DTS:DTSID="{D5D56668-3B2B-4B17-8C8B-D72A95CEA9C4}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.2000.166"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="Package"
+  DTS:PackageType="5"
+  DTS:VersionBuild="26"
+  DTS:VersionGUID="{586C3789-5406-4194-9B3C-1E3CA52EFA66}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[LocalHost.WorkFlow]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{3D7AF60B-3ADB-47F4-8305-A7A84C5B2B89}"
+      DTS:ObjectName="LocalHost.WorkFlow">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=.;Initial Catalog=WorkFlow;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:PackageParameters>
+    <DTS:PackageParameter
+      DTS:CreationName=""
+      DTS:DataType="20"
+      DTS:DTSID="{4C0F4BD0-0C3D-4427-9B01-1DA8F62B9404}"
+      DTS:ObjectName="ExecutionID">
+      <DTS:Property
+        DTS:DataType="20"
+        DTS:Name="ParameterValue">0</DTS:Property>
+    </DTS:PackageParameter>
+  </DTS:PackageParameters>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{45642B9D-8C97-4FE3-AA13-A95CE0CE4432}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="JsonString">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Chack IS JSON data"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{CFAE1CA7-D684-4E75-909D-2EBBC0CBF177}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Chack IS JSON data"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2019; © 2019 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{3D7AF60B-3ADB-47F4-8305-A7A84C5B2B89}"
+          SQLTask:SqlStatementSource="IF (SELECT &#xA;&#x9;&#x9;MIN(ISJSON(FileBody)) AS IS_JSON&#xA;    FROM stage1.exchangeratesapi) &lt; 1&#xA;&#xA;&#x9;RAISERROR ('Current file is not valid JSON format', 16, 1)" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Transfer date from stage1 to stage2"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{C8A7DB86-934B-466D-B87F-7E5E06BF9B89}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Transfer date from stage1 to stage2"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Insert parsed json to stage2"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[stage2].[exchangeratesAPI]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].Columns[historical]"
+                      cachedDataType="i4"
+                      cachedName="historical"
+                      externalMetadataColumnId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].ExternalColumns[Historical]"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[historical]" />
+                    <inputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].Columns[date]"
+                      cachedDataType="dbDate"
+                      cachedName="date"
+                      externalMetadataColumnId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].ExternalColumns[Date]"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[date]" />
+                    <inputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].Columns[ExecutionID]"
+                      cachedDataType="i8"
+                      cachedName="ExecutionID"
+                      externalMetadataColumnId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].ExternalColumns[ExecutionID]"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[ExecutionID]" />
+                    <inputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].Columns[timestamp]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="timestamp"
+                      externalMetadataColumnId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].ExternalColumns[Timestamp]"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[timestamp]" />
+                    <inputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].Columns[base]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="base"
+                      externalMetadataColumnId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].ExternalColumns[Base]"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[base]" />
+                    <inputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].Columns[Rate]"
+                      cachedDataType="r4"
+                      cachedName="Rate"
+                      externalMetadataColumnId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].ExternalColumns[Rate]"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[Rate]" />
+                    <inputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].Columns[Currency]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="Currency"
+                      externalMetadataColumnId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].ExternalColumns[Currency]"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[Currency]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].ExternalColumns[Timestamp]"
+                      dataType="dbTimeStamp2"
+                      name="Timestamp"
+                      scale="7" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].ExternalColumns[Base]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="Base" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].ExternalColumns[Historical]"
+                      dataType="bool"
+                      name="Historical" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].ExternalColumns[Date]"
+                      dataType="dbDate"
+                      name="Date" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].ExternalColumns[Rate]"
+                      dataType="r4"
+                      name="Rate" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].ExternalColumns[Currency]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="Currency" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input].ExternalColumns[ExecutionID]"
+                      dataType="i8"
+                      name="ExecutionID" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="Parsed json from stage1"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT 
+	 CAST(DATEADD(S, CAST(JSON_VALUE(FileBody, '$.timestamp') AS BIGINT), '1970-01-01') AS DATETIME2) AS [timestamp]
+	,CAST(JSON_VALUE(FileBody, '$.base') as CHAR(3)) as base
+	,CASE WHEN (JSON_VALUE(FileBody, '$.historical') = 'true') THEN 1
+	  ELSE 0 END AS historical
+	,CAST(JSON_VALUE(FileBody, '$.date') AS DATE) AS [date]
+	,CAST([key] as CHAR(3)) AS Currency
+	,CAST([Value] as real) AS Rate
+    ,[ExecutionID]
+FROM stage1.exchangeratesapi
+	CROSS APPLY OPENJSON(JSON_QUERY(filebody,'$.rates'))
+WHERE [ExecutionID] = ?</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping">"Parameter0:Input",{4C0F4BD0-F3C2-4427-9B01-1DA8F62B9404};</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[timestamp]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].ExternalColumns[timestamp]"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[timestamp]"
+                      name="timestamp"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[base]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].ExternalColumns[base]"
+                      length="3"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[base]"
+                      name="base"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[historical]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].ExternalColumns[historical]"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[historical]"
+                      name="historical"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[date]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].ExternalColumns[date]"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[date]"
+                      name="date"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[Currency]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].ExternalColumns[Currency]"
+                      length="3"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[Currency]"
+                      name="Currency"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[ExecutionID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].ExternalColumns[ExecutionID]"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[ExecutionID]"
+                      name="ExecutionID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[Rate]"
+                      dataType="r4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].ExternalColumns[Rate]"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].Columns[Rate]"
+                      name="Rate"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].ExternalColumns[timestamp]"
+                      dataType="dbTimeStamp2"
+                      name="timestamp"
+                      scale="7" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].ExternalColumns[base]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="base" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].ExternalColumns[historical]"
+                      dataType="i4"
+                      name="historical" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].ExternalColumns[date]"
+                      dataType="dbDate"
+                      name="date" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].ExternalColumns[Currency]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="Currency" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].ExternalColumns[Rate]"
+                      dataType="r4"
+                      name="Rate" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output].ExternalColumns[ExecutionID]"
+                      dataType="i8"
+                      name="ExecutionID" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Error Output].Columns[timestamp]"
+                      dataType="dbTimeStamp2"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Error Output].Columns[timestamp]"
+                      name="timestamp"
+                      scale="7" />
+                    <outputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Error Output].Columns[base]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Error Output].Columns[base]"
+                      name="base" />
+                    <outputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Error Output].Columns[historical]"
+                      dataType="i4"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Error Output].Columns[historical]"
+                      name="historical" />
+                    <outputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Error Output].Columns[date]"
+                      dataType="dbDate"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Error Output].Columns[date]"
+                      name="date" />
+                    <outputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Error Output].Columns[Currency]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Error Output].Columns[Currency]"
+                      name="Currency" />
+                    <outputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Error Output].Columns[ExecutionID]"
+                      dataType="i8"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Error Output].Columns[ExecutionID]"
+                      name="ExecutionID" />
+                    <outputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                    <outputColumn
+                      refId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Error Output].Columns[Rate]"
+                      dataType="r4"
+                      lineageId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Error Output].Columns[Rate]"
+                      name="Rate" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Transfer date from stage1 to stage2.Paths[OLE DB Source Output]"
+              endId="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2.Inputs[OLE DB Destination Input]"
+              name="OLE DB Source Output"
+              startId="Package\Transfer date from stage1 to stage2\Parsed json from stage1.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{347F94BF-040D-42B0-A28A-D217E0BBFD2E}"
+      DTS:From="Package\Chack IS JSON data"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Transfer date from stage1 to stage2" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="248,42.6666666666667"
+          Id="Package\Transfer date from stage1 to stage2"
+          TopLeft="5.50000000000003,108.166666666667" />
+        <NodeLayout
+          Size="177.333333333334,42.6666666666667"
+          Id="Package\Chack IS JSON data"
+          TopLeft="40.8333333333333,5.50000000000004" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="129.5,48.1666666666667">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60.0000000000001"
+              Start="0,0"
+              End="0,52.5000000000001">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5000000000001" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Transfer date from stage1 to stage2">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="194.666666666667,42.6666666666667"
+          Id="Package\Transfer date from stage1 to stage2\Parsed json from stage1"
+          TopLeft="14.8333333333333,5.50000000000004" />
+        <NodeLayout
+          Size="210.666666666667,42.6666666666667"
+          Id="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2"
+          TopLeft="5.50000000000001,108.166666666667" />
+        <EdgeLayout
+          Id="Package\Transfer date from stage1 to stage2.Paths[OLE DB Source Output]"
+          TopLeft="111.5,48.1666666666667">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60.0000000000001"
+              Start="0,0"
+              End="0,52.5000000000001">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5000000000001" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Transfer date from stage1 to stage2\Parsed json from stage1">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Transfer date from stage1 to stage2\Insert parsed json to stage2">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

@@ -1,0 +1,1055 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="5/10/2021 5:54:04 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="DESKTOP-8Q7FPL1"
+  DTS:CreatorName="DESKTOP-8Q7FPL1\admin"
+  DTS:DTSID="{7D9F3280-A2ED-4BE0-B360-321D2A4B85EA}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.2000.166"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="Stage2TransformExchangeRates"
+  DTS:PackageType="5"
+  DTS:VersionBuild="62"
+  DTS:VersionGUID="{3008C904-2D7E-413E-9977-1BF3AEF8D0CF}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[LocalHost.WorkFlow]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{3F19A9D0-6840-4E4F-A766-8E3546A04533}"
+      DTS:ObjectName="LocalHost.WorkFlow">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=.;Initial Catalog=WorkFlow;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:PackageParameters>
+    <DTS:PackageParameter
+      DTS:CreationName=""
+      DTS:DataType="20"
+      DTS:DTSID="{3C1860A2-4830-4A29-8C9F-FB7E7CEEC6C5}"
+      DTS:ObjectName="ExecutionID">
+      <DTS:Property
+        DTS:DataType="20"
+        DTS:Name="ParameterValue">0</DTS:Property>
+    </DTS:PackageParameter>
+  </DTS:PackageParameters>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{2E616D12-1319-489E-B82B-5B09A9F0ACD0}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Package::ExecutionID]  != 0 ? @[$Package::ExecutionID] :  -1 * (DT_I8) REPLACE(REPLACE(REPLACE(REPLACE(SUBSTRING((DT_WSTR, 30)GETDATE() ,1,21),&quot;-&quot;,&quot;&quot;),&quot; &quot;,&quot;&quot;),&quot;:&quot;,&quot;&quot;),&quot;.&quot;,&quot;&quot;)"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="ExecutionId">
+      <DTS:VariableValue
+        DTS:DataType="20">-202105132035309</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{E4E48EF3-5490-40BF-B293-3068E26468E0}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="JsonString">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Check if file is valid JSON"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{B7785BAE-5766-4186-8305-57B142BA46BF}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Check if file is valid JSON"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2019; © 2019 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{3F19A9D0-6840-4E4F-A766-8E3546A04533}"
+          SQLTask:SqlStatementSource="IF (SELECT &#xA;&#x9;&#x9;MIN(ISJSON(FileBody)) AS IS_JSON&#xA;    FROM stage1.exchangeratesapi) &lt; 1&#xA;&#xA;&#x9;RAISERROR ('Current file is not valid JSON format', 16, 1)" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\stage1 to stage2 Currency Rate"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{8800B7FB-00FB-4597-AD6E-D254F5732E75}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="stage1 to stage2 Currency Rate"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="stage1 GetExchangeRateList"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT 
+	  c.CurrencyId
+	 ,c.CurrencyCodeISO3
+	 ,r.[date] AS EffectiveDate
+	 ,(SELECT CurrencyId 
+		FROM stage1.GetResolvedCurrencyList (?) AS Basecurrency
+		WHERE Basecurrency.CurrencyCodeISO3 = r.base) BaseCurrencyId
+	,r.Rate
+	,r.[timestamp]
+	,CAST(GETDATE() AS DATE) AS InsertedDate
+	,r.ExecutionId
+FROM stage1.GetResolvedCurrencyList (?) AS c
+	INNER JOIN stage1.GetExchangeRateList (?) AS r ON c.CurrencyCodeISO3 = r.Currency</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping">"@ExecutionId:Input",{2E616D12-1319-489E-B82B-5B09A9F0ACD0};"@ExecutionId:Input",{2E616D12-1319-489E-B82B-5B09A9F0ACD0};"@ExecutionId:Input",{2E616D12-1319-489E-B82B-5B09A9F0ACD0};</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[timestamp]"
+                      dataType="dbTimeStamp2"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].ExternalColumns[timestamp]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[timestamp]"
+                      name="timestamp"
+                      scale="7"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[Rate]"
+                      dataType="r4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].ExternalColumns[Rate]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[Rate]"
+                      name="Rate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[CurrencyId]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].ExternalColumns[CurrencyId]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[CurrencyId]"
+                      name="CurrencyId"
+                      precision="38"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[CurrencyCodeISO3]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].ExternalColumns[CurrencyCodeISO3]"
+                      length="3"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[CurrencyCodeISO3]"
+                      name="CurrencyCodeISO3"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[EffectiveDate]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].ExternalColumns[EffectiveDate]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[EffectiveDate]"
+                      name="EffectiveDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[BaseCurrencyId]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].ExternalColumns[BaseCurrencyId]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[BaseCurrencyId]"
+                      name="BaseCurrencyId"
+                      precision="38"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[ExecutionId]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].ExternalColumns[ExecutionId]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[ExecutionId]"
+                      name="ExecutionId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[InsertedDate]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].ExternalColumns[InsertedDate]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[InsertedDate]"
+                      name="InsertedDate"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].ExternalColumns[timestamp]"
+                      dataType="dbTimeStamp2"
+                      name="timestamp"
+                      scale="7" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].ExternalColumns[Rate]"
+                      dataType="r4"
+                      name="Rate" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].ExternalColumns[CurrencyId]"
+                      dataType="numeric"
+                      name="CurrencyId"
+                      precision="38" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].ExternalColumns[CurrencyCodeISO3]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="CurrencyCodeISO3" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].ExternalColumns[EffectiveDate]"
+                      dataType="dbDate"
+                      name="EffectiveDate" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].ExternalColumns[BaseCurrencyId]"
+                      dataType="numeric"
+                      name="BaseCurrencyId"
+                      precision="38" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].ExternalColumns[ExecutionId]"
+                      dataType="i8"
+                      name="ExecutionId" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].ExternalColumns[InsertedDate]"
+                      dataType="dbDate"
+                      name="InsertedDate" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[CurrencyId]"
+                      dataType="numeric"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[CurrencyId]"
+                      name="CurrencyId"
+                      precision="38" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[CurrencyCodeISO3]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[CurrencyCodeISO3]"
+                      name="CurrencyCodeISO3" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[EffectiveDate]"
+                      dataType="dbDate"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[EffectiveDate]"
+                      name="EffectiveDate" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[BaseCurrencyId]"
+                      dataType="numeric"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[BaseCurrencyId]"
+                      name="BaseCurrencyId"
+                      precision="38" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[timestamp]"
+                      dataType="dbTimeStamp2"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[timestamp]"
+                      name="timestamp"
+                      scale="7" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[Rate]"
+                      dataType="r4"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[Rate]"
+                      name="Rate" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[InsertedDate]"
+                      dataType="dbDate"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[InsertedDate]"
+                      name="InsertedDate" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[ExecutionId]"
+                      dataType="i8"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[ExecutionId]"
+                      name="ExecutionId" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="stage1 GetResolvedCurrencyList"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT 
+	 CurrencyId
+	,CurrencyCodeISO3
+	,ExecutionID
+	,[timestamp]
+FROM stage1.GetResolvedCurrencyList (?)</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping">"@ExecutionId:Input",{2E616D12-1319-489E-B82B-5B09A9F0ACD0};</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].Columns[CurrencyId]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].ExternalColumns[CurrencyId]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].Columns[CurrencyId]"
+                      name="CurrencyId"
+                      precision="38"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].Columns[CurrencyCodeISO3]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].ExternalColumns[CurrencyCodeISO3]"
+                      length="3"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].Columns[CurrencyCodeISO3]"
+                      name="CurrencyCodeISO3"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].Columns[ExecutionID]"
+                      dataType="i8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].ExternalColumns[ExecutionID]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].Columns[ExecutionID]"
+                      name="ExecutionID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].Columns[timestamp]"
+                      dataType="dbTimeStamp2"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].ExternalColumns[timestamp]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].Columns[timestamp]"
+                      name="timestamp"
+                      scale="7"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].ExternalColumns[CurrencyId]"
+                      dataType="numeric"
+                      name="CurrencyId"
+                      precision="38" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].ExternalColumns[CurrencyCodeISO3]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="CurrencyCodeISO3" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].ExternalColumns[ExecutionID]"
+                      dataType="i8"
+                      name="ExecutionID" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].ExternalColumns[timestamp]"
+                      dataType="dbDate"
+                      name="timestamp" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Error Output].Columns[CurrencyId]"
+                      dataType="numeric"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Error Output].Columns[CurrencyId]"
+                      name="CurrencyId"
+                      precision="38" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Error Output].Columns[CurrencyCodeISO3]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Error Output].Columns[CurrencyCodeISO3]"
+                      name="CurrencyCodeISO3" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Error Output].Columns[ExecutionID]"
+                      dataType="i8"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Error Output].Columns[ExecutionID]"
+                      name="ExecutionID" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Error Output].Columns[timestamp]"
+                      dataType="dbDate"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Error Output].Columns[timestamp]"
+                      name="timestamp" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\stage1 to stage2 Currency Rate\stage2 Currency"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="stage2 Currency"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[stage2].[Currency]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Inputs[OLE DB Destination Input].Columns[CurrencyId]"
+                      cachedDataType="numeric"
+                      cachedName="CurrencyId"
+                      cachedPrecision="38"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Inputs[OLE DB Destination Input].ExternalColumns[CurrencyId]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].Columns[CurrencyId]" />
+                    <inputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Inputs[OLE DB Destination Input].Columns[ExecutionID]"
+                      cachedDataType="i8"
+                      cachedName="ExecutionID"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Inputs[OLE DB Destination Input].ExternalColumns[ExecutionId]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].Columns[ExecutionID]" />
+                    <inputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Inputs[OLE DB Destination Input].Columns[timestamp]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="timestamp"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Inputs[OLE DB Destination Input].ExternalColumns[StartDate]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].Columns[timestamp]" />
+                    <inputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Inputs[OLE DB Destination Input].Columns[CurrencyCodeISO3]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="CurrencyCodeISO3"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Inputs[OLE DB Destination Input].ExternalColumns[CurrencyCodeISO3]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output].Columns[CurrencyCodeISO3]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Inputs[OLE DB Destination Input].ExternalColumns[CurrencyId]"
+                      dataType="i4"
+                      name="CurrencyId" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Inputs[OLE DB Destination Input].ExternalColumns[CurrencyCodeISO3]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="CurrencyCodeISO3" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Inputs[OLE DB Destination Input].ExternalColumns[CurrencyCodeISO2]"
+                      codePage="1252"
+                      dataType="str"
+                      length="2"
+                      name="CurrencyCodeISO2" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Inputs[OLE DB Destination Input].ExternalColumns[StartDate]"
+                      dataType="dbTimeStamp2"
+                      name="StartDate"
+                      scale="7" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Inputs[OLE DB Destination Input].ExternalColumns[CountryName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1000"
+                      name="CountryName" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Inputs[OLE DB Destination Input].ExternalColumns[ExecutionId]"
+                      dataType="i8"
+                      name="ExecutionId" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="stage2 ExchangeRate"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[stage2].[ExchangeRate]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].Columns[ExecutionId]"
+                      cachedDataType="i8"
+                      cachedName="ExecutionId"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].ExternalColumns[ExecutionId]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[ExecutionId]" />
+                    <inputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].Columns[CurrencyId]"
+                      cachedDataType="numeric"
+                      cachedName="CurrencyId"
+                      cachedPrecision="38"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].ExternalColumns[CurrencyId]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[CurrencyId]" />
+                    <inputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].Columns[timestamp]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="timestamp"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].ExternalColumns[Timestamp]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[timestamp]" />
+                    <inputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].Columns[Rate]"
+                      cachedDataType="r4"
+                      cachedName="Rate"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].ExternalColumns[Rate]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[Rate]" />
+                    <inputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].Columns[InsertedDate]"
+                      cachedDataType="dbDate"
+                      cachedName="InsertedDate"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].ExternalColumns[InsertedDate]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[InsertedDate]" />
+                    <inputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].Columns[EffectiveDate]"
+                      cachedDataType="dbDate"
+                      cachedName="EffectiveDate"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].ExternalColumns[EffectiveDate]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[EffectiveDate]" />
+                    <inputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].Columns[BaseCurrencyId]"
+                      cachedDataType="numeric"
+                      cachedName="BaseCurrencyId"
+                      cachedPrecision="38"
+                      externalMetadataColumnId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].ExternalColumns[BaseCurrencyId]"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output].Columns[BaseCurrencyId]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].ExternalColumns[CurrencyId]"
+                      dataType="i4"
+                      name="CurrencyId" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].ExternalColumns[EffectiveDate]"
+                      dataType="dbDate"
+                      name="EffectiveDate" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].ExternalColumns[BaseCurrencyId]"
+                      dataType="i4"
+                      name="BaseCurrencyId" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].ExternalColumns[Rate]"
+                      dataType="r4"
+                      name="Rate" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].ExternalColumns[Timestamp]"
+                      dataType="dbTimeStamp2"
+                      name="Timestamp"
+                      scale="7" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].ExternalColumns[InsertedDate]"
+                      dataType="dbTimeStamp2"
+                      name="InsertedDate"
+                      scale="7" />
+                    <externalMetadataColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input].ExternalColumns[ExecutionId]"
+                      dataType="i8"
+                      name="ExecutionId" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\stage1 to stage2 Currency Rate.Paths[OLE DB Source Output]"
+              endId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Inputs[OLE DB Destination Input]"
+              name="OLE DB Source Output"
+              startId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Outputs[OLE DB Source Output]" />
+            <path
+              refId="Package\stage1 to stage2 Currency Rate.Paths[OLE DB Source Output1]"
+              endId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Inputs[OLE DB Destination Input]"
+              name="OLE DB Source Output"
+              startId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{033CB4A7-8BCE-4AB2-AAD1-A64ECA64F1B2}"
+      DTS:From="Package\Check if file is valid JSON"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\stage1 to stage2 Currency Rate" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="201.333333333334,42.6666666666667"
+          Id="Package\Check if file is valid JSON"
+          TopLeft="19.5,5.50000000000004" />
+        <NodeLayout
+          Size="229.333333333334,42.6666666666667"
+          Id="Package\stage1 to stage2 Currency Rate"
+          TopLeft="6.74999998137356,109.535087745055" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="120.791666657353,48.1666666666667">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,61.3684210783888"
+              Start="0,0"
+              End="0,53.8684210783888">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,53.8684210783888" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\stage1 to stage2 Currency Rate">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="236,42.6666666666667"
+          Id="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList"
+          TopLeft="6.1249999906868,6.86842107838875" />
+        <NodeLayout
+          Size="157.333333333334,42.6666666666667"
+          Id="Package\stage1 to stage2 Currency Rate\stage2 Currency"
+          TopLeft="44.8333333333333,108.166666666667" />
+        <NodeLayout
+          Size="184,42.6666666666667"
+          Id="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate"
+          TopLeft="319.5,108.166666666667" />
+        <NodeLayout
+          Size="218.666666666667,42.6666666666667"
+          Id="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList"
+          TopLeft="302.791666657354,6.1842105391944" />
+        <EdgeLayout
+          Id="Package\stage1 to stage2 Currency Rate.Paths[OLE DB Source Output1]"
+          TopLeft="411.812499995344,48.8508772058611">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59.3157894608059"
+              Start="0,0"
+              End="0,51.8157894608059">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.8157894608059" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\stage1 to stage2 Currency Rate.Paths[OLE DB Source Output]"
+          TopLeft="123.812499995343,49.5350877450554">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.6315789216116"
+              Start="0,0"
+              End="0,51.1315789216116">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1315789216116" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\stage1 to stage2 Currency Rate\stage2 Currency">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
