@@ -11,8 +11,8 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="Stage2TransformExchangeRates"
   DTS:PackageType="5"
-  DTS:VersionBuild="62"
-  DTS:VersionGUID="{3008C904-2D7E-413E-9977-1BF3AEF8D0CF}">
+  DTS:VersionBuild="63"
+  DTS:VersionGUID="{BA78FD6D-CA9C-49FA-B246-A5F8F3FF5274}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -50,17 +50,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="ExecutionId">
       <DTS:VariableValue
-        DTS:DataType="20">-202105132035309</DTS:VariableValue>
-    </DTS:Variable>
-    <DTS:Variable
-      DTS:CreationName=""
-      DTS:DTSID="{E4E48EF3-5490-40BF-B293-3068E26468E0}"
-      DTS:IncludeInDebugDump="2345"
-      DTS:Namespace="User"
-      DTS:ObjectName="JsonString">
-      <DTS:VariableValue
-        DTS:DataType="8"
-        xml:space="preserve"></DTS:VariableValue>
+        DTS:DataType="20">-202105172315560</DTS:VariableValue>
     </DTS:Variable>
   </DTS:Variables>
   <DTS:Executables>

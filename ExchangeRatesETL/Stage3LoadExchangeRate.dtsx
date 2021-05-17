@@ -9,7 +9,7 @@
   DTS:ExecutableType="Microsoft.Package"
   DTS:LastModifiedProductVersion="15.0.2000.166"
   DTS:LocaleID="1033"
-  DTS:ObjectName="Package1"
+  DTS:ObjectName="Stage3LoadExchangeRate"
   DTS:PackageType="5"
   DTS:VersionBuild="6"
   DTS:VersionGUID="{1CAFCE4B-C7A2-45C5-ABEB-5812670F178C}">

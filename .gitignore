@@ -10,3 +10,4 @@
 *.user
 /ExchangeRatesETL/bin/Development
 /ExchangeRatesETL/obj/Development
+/ExchangeRatesDatabase/ExchangeRatesDatabase.dbmdl
