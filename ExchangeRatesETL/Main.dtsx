@@ -11,8 +11,8 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="Main"
   DTS:PackageType="5"
-  DTS:VersionBuild="32"
-  DTS:VersionGUID="{43C48388-1D12-4901-BDB7-9DBBFBAC3A7F}">
+  DTS:VersionBuild="33"
+  DTS:VersionGUID="{59A945DC-03F7-469D-B396-7BBBF0FDE32F}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:PackageParameters>
@@ -123,13 +123,13 @@
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
-      DTS:refId="Package\Expression Task"
+      DTS:refId="Package\Get ExecutionId"
       DTS:CreationName="Microsoft.ExpressionTask"
       DTS:Description="Expression Task"
       DTS:DTSID="{D63D17CE-963D-451F-BBA4-F01794A619D6}"
       DTS:ExecutableType="Microsoft.ExpressionTask"
       DTS:LocaleID="-1"
-      DTS:ObjectName="Expression Task"
+      DTS:ObjectName="Get ExecutionId"
       DTS:TaskContact="Expression Task;Microsoft Corporation; SQL Server 2019; © 2019 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
       DTS:ThreadHint="0">
       <DTS:Variables />
@@ -152,7 +152,7 @@
       DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
       DTS:CreationName=""
       DTS:DTSID="{D97287B0-8A36-456B-9476-2F7EF39AA421}"
-      DTS:From="Package\Expression Task"
+      DTS:From="Package\Get ExecutionId"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint 1"
       DTS:To="Package\Execute Stage1DownloadExchangeRates" />
@@ -202,8 +202,8 @@
           Id="Package\Execute Stage3LoadExchangeRate"
           TopLeft="20.8333333333334,313.5" />
         <NodeLayout
-          Size="158.666666666667,42.6666666666667"
-          Id="Package\Expression Task"
+          Size="156,42.6666666666667"
+          Id="Package\Get ExecutionId"
           TopLeft="65.5,5.50000000000004" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint]"
@@ -229,18 +229,18 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 1]"
-          TopLeft="144.833333333333,48.1666666666667">
+          TopLeft="144.166666666667,48.1666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,60.0000000000001"
+              EndConnector="0,60.0000000000003"
               Start="0,0"
-              End="0,52.5000000000001">
+              End="0,52.5000000000003">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,52.5000000000001" />
+                    End="0,52.5000000000003" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
