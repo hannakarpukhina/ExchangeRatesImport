@@ -35,10 +35,12 @@ Normalization data from JSON format and insert one into stage2 tables.
 
 ### Stage3LoadExchangeRate
 Inserts transformed data into target tables.
+
 <img width="329" alt="Stage3LoadExchangeRates" src="https://user-images.githubusercontent.com/83240320/119411726-c6456700-bce2-11eb-86da-6e89507be996.PNG">
 
 ### ClearStaging
 Cleans old data from stage1 and stage2.
+
 <img width="149" alt="ClearStaging" src="https://user-images.githubusercontent.com/83240320/119411901-102e4d00-bce3-11eb-965d-a60e65868c37.PNG">
 
 
