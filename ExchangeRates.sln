@@ -7,6 +7,11 @@ Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "ExchangeRatesETL", "Exchang
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "ExchangeRatesDatabase", "ExchangeRatesDatabase\ExchangeRatesDatabase.sqlproj", "{94E74DA3-DA24-4EFA-8222-41894F20342F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DE06CCC4-D2DB-4F8C-80CA-6161BDE11ECF}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

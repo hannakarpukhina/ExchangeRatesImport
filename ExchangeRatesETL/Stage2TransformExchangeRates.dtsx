@@ -11,16 +11,16 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="Stage2TransformExchangeRates"
   DTS:PackageType="5"
-  DTS:VersionBuild="63"
-  DTS:VersionGUID="{BA78FD6D-CA9C-49FA-B246-A5F8F3FF5274}">
+  DTS:VersionBuild="64"
+  DTS:VersionGUID="{330E7835-3D72-477B-A8A2-5B32716C992D}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
     <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[LocalHost.WorkFlow]"
+      DTS:refId="Package.ConnectionManagers[DW]"
       DTS:CreationName="OLEDB"
       DTS:DTSID="{3F19A9D0-6840-4E4F-A766-8E3546A04533}"
-      DTS:ObjectName="LocalHost.WorkFlow">
+      DTS:ObjectName="DW">
       <DTS:ObjectData>
         <DTS:ConnectionManager
           DTS:ConnectRetryCount="1"
@@ -50,7 +50,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="ExecutionId">
       <DTS:VariableValue
-        DTS:DataType="20">-202105172315560</DTS:VariableValue>
+        DTS:DataType="20">-202105242154442</DTS:VariableValue>
     </DTS:Variable>
   </DTS:Variables>
   <DTS:Executables>
@@ -148,8 +148,8 @@ FROM stage1.GetResolvedCurrencyList (?) AS c
               <connections>
                 <connection
                   refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[LocalHost.WorkFlow]"
-                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  connectionManagerID="Package.ConnectionManagers[DW]"
+                  connectionManagerRefId="Package.ConnectionManagers[DW]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>
@@ -400,8 +400,8 @@ FROM stage1.GetResolvedCurrencyList (?)</property>
               <connections>
                 <connection
                   refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[LocalHost.WorkFlow]"
-                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  connectionManagerID="Package.ConnectionManagers[DW]"
+                  connectionManagerRefId="Package.ConnectionManagers[DW]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>
@@ -578,8 +578,8 @@ FROM stage1.GetResolvedCurrencyList (?)</property>
               <connections>
                 <connection
                   refId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[LocalHost.WorkFlow]"
-                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  connectionManagerID="Package.ConnectionManagers[DW]"
+                  connectionManagerRefId="Package.ConnectionManagers[DW]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>
@@ -740,8 +740,8 @@ FROM stage1.GetResolvedCurrencyList (?)</property>
               <connections>
                 <connection
                   refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[LocalHost.WorkFlow]"
-                  connectionManagerRefId="Package.ConnectionManagers[LocalHost.WorkFlow]"
+                  connectionManagerID="Package.ConnectionManagers[DW]"
+                  connectionManagerRefId="Package.ConnectionManagers[DW]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>

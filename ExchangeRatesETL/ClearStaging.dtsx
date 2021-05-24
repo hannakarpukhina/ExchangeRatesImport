@@ -11,16 +11,16 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="ClearStaging"
   DTS:PackageType="5"
-  DTS:VersionBuild="15"
-  DTS:VersionGUID="{5176B636-854E-4C31-AABF-CC7041AFFCAA}">
+  DTS:VersionBuild="16"
+  DTS:VersionGUID="{9BC37060-179B-4483-85A5-E58640FA1407}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
     <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[LocalHost.WorkFlow]"
+      DTS:refId="Package.ConnectionManagers[DW]"
       DTS:CreationName="OLEDB"
       DTS:DTSID="{EE4AC1A6-3E3D-4326-B837-5022F00B5DFC}"
-      DTS:ObjectName="LocalHost.WorkFlow">
+      DTS:ObjectName="DW">
       <DTS:ObjectData>
         <DTS:ConnectionManager
           DTS:ConnectRetryCount="1"
@@ -50,7 +50,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="ExecutionId">
       <DTS:VariableValue
-        DTS:DataType="20">-202105162238277</DTS:VariableValue>
+        DTS:DataType="20">-202105242257404</DTS:VariableValue>
     </DTS:Variable>
   </DTS:Variables>
   <DTS:Executables>
