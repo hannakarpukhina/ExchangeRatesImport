@@ -11,24 +11,10 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="Stage2TransformExchangeRates"
   DTS:PackageType="5"
-  DTS:VersionBuild="64"
-  DTS:VersionGUID="{330E7835-3D72-477B-A8A2-5B32716C992D}">
+  DTS:VersionBuild="65"
+  DTS:VersionGUID="{865BB385-F2E9-4E07-A7E7-3106FB7640EB}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
-  <DTS:ConnectionManagers>
-    <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[DW]"
-      DTS:CreationName="OLEDB"
-      DTS:DTSID="{3F19A9D0-6840-4E4F-A766-8E3546A04533}"
-      DTS:ObjectName="DW">
-      <DTS:ObjectData>
-        <DTS:ConnectionManager
-          DTS:ConnectRetryCount="1"
-          DTS:ConnectRetryInterval="5"
-          DTS:ConnectionString="Data Source=.;Initial Catalog=WorkFlow;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
-      </DTS:ObjectData>
-    </DTS:ConnectionManager>
-  </DTS:ConnectionManagers>
   <DTS:PackageParameters>
     <DTS:PackageParameter
       DTS:CreationName=""
@@ -50,7 +36,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="ExecutionId">
       <DTS:VariableValue
-        DTS:DataType="20">-202105242154442</DTS:VariableValue>
+        DTS:DataType="20">-202105251855597</DTS:VariableValue>
     </DTS:Variable>
   </DTS:Variables>
   <DTS:Executables>
@@ -67,7 +53,7 @@
       <DTS:Variables />
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
-          SQLTask:Connection="{3F19A9D0-6840-4E4F-A766-8E3546A04533}"
+          SQLTask:Connection="{08D4C400-68C1-4CE8-A42C-408E9FAB0B5B}"
           SQLTask:SqlStatementSource="IF (SELECT &#xA;&#x9;&#x9;MIN(ISJSON(FileBody)) AS IS_JSON&#xA;    FROM stage1.exchangeratesapi) &lt; 1&#xA;&#xA;&#x9;RAISERROR ('Current file is not valid JSON format', 16, 1)" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
       </DTS:ObjectData>
     </DTS:Executable>
@@ -148,8 +134,8 @@ FROM stage1.GetResolvedCurrencyList (?) AS c
               <connections>
                 <connection
                   refId="Package\stage1 to stage2 Currency Rate\stage1 GetExchangeRateList.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[DW]"
-                  connectionManagerRefId="Package.ConnectionManagers[DW]"
+                  connectionManagerID="{08D4C400-68C1-4CE8-A42C-408E9FAB0B5B}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[DW]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>
@@ -400,8 +386,8 @@ FROM stage1.GetResolvedCurrencyList (?)</property>
               <connections>
                 <connection
                   refId="Package\stage1 to stage2 Currency Rate\stage1 GetResolvedCurrencyList.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[DW]"
-                  connectionManagerRefId="Package.ConnectionManagers[DW]"
+                  connectionManagerID="{08D4C400-68C1-4CE8-A42C-408E9FAB0B5B}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[DW]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>
@@ -557,7 +543,7 @@ FROM stage1.GetResolvedCurrencyList (?)</property>
                   dataType="System.Int32"
                   description="Specifies the mode used to access the database."
                   name="AccessMode"
-                  typeConverter="AccessMode">0</property>
+                  typeConverter="AccessMode">3</property>
                 <property
                   dataType="System.Boolean"
                   description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
@@ -569,7 +555,7 @@ FROM stage1.GetResolvedCurrencyList (?)</property>
                 <property
                   dataType="System.String"
                   description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
-                  name="FastLoadOptions"></property>
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
                 <property
                   dataType="System.Int32"
                   description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
@@ -578,8 +564,8 @@ FROM stage1.GetResolvedCurrencyList (?)</property>
               <connections>
                 <connection
                   refId="Package\stage1 to stage2 Currency Rate\stage2 Currency.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[DW]"
-                  connectionManagerRefId="Package.ConnectionManagers[DW]"
+                  connectionManagerID="{08D4C400-68C1-4CE8-A42C-408E9FAB0B5B}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[DW]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>
@@ -740,8 +726,8 @@ FROM stage1.GetResolvedCurrencyList (?)</property>
               <connections>
                 <connection
                   refId="Package\stage1 to stage2 Currency Rate\stage2 ExchangeRate.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[DW]"
-                  connectionManagerRefId="Package.ConnectionManagers[DW]"
+                  connectionManagerID="{08D4C400-68C1-4CE8-A42C-408E9FAB0B5B}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[DW]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>

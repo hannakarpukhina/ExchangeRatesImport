@@ -11,24 +11,10 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="ClearStaging"
   DTS:PackageType="5"
-  DTS:VersionBuild="16"
-  DTS:VersionGUID="{9BC37060-179B-4483-85A5-E58640FA1407}">
+  DTS:VersionBuild="17"
+  DTS:VersionGUID="{1F020783-158A-4D30-AFF0-C9CC5234E1B6}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
-  <DTS:ConnectionManagers>
-    <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[DW]"
-      DTS:CreationName="OLEDB"
-      DTS:DTSID="{EE4AC1A6-3E3D-4326-B837-5022F00B5DFC}"
-      DTS:ObjectName="DW">
-      <DTS:ObjectData>
-        <DTS:ConnectionManager
-          DTS:ConnectRetryCount="1"
-          DTS:ConnectRetryInterval="5"
-          DTS:ConnectionString="Data Source=.;Initial Catalog=WorkFlow;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
-      </DTS:ObjectData>
-    </DTS:ConnectionManager>
-  </DTS:ConnectionManagers>
   <DTS:PackageParameters>
     <DTS:PackageParameter
       DTS:CreationName=""
@@ -50,7 +36,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="ExecutionId">
       <DTS:VariableValue
-        DTS:DataType="20">-202105242257404</DTS:VariableValue>
+        DTS:DataType="20">-202105251850369</DTS:VariableValue>
     </DTS:Variable>
   </DTS:Variables>
   <DTS:Executables>
@@ -67,7 +53,7 @@
       <DTS:Variables />
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
-          SQLTask:Connection="{EE4AC1A6-3E3D-4326-B837-5022F00B5DFC}"
+          SQLTask:Connection="{08D4C400-68C1-4CE8-A42C-408E9FAB0B5B}"
           SQLTask:SqlStatementSource="DELETE FROM [stage1].[ExchangeRatesAPI]&#xA;WHERE ExecutionId = ?" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
           <SQLTask:ParameterBinding
             SQLTask:ParameterName="0"
@@ -91,7 +77,7 @@
       <DTS:Variables />
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
-          SQLTask:Connection="{EE4AC1A6-3E3D-4326-B837-5022F00B5DFC}"
+          SQLTask:Connection="{08D4C400-68C1-4CE8-A42C-408E9FAB0B5B}"
           SQLTask:SqlStatementSource="DELETE FROM [stage2].[Currency]&#xA;WHERE ExecutionId = ?&#xA;                 DELETE FROM [stage2].[ExchangeRate]&#xA;                WHERE ExecutionId = ?" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
           <SQLTask:ParameterBinding
             SQLTask:ParameterName="0"

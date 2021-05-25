@@ -11,24 +11,10 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="Stage3LoadExchangeRate"
   DTS:PackageType="5"
-  DTS:VersionBuild="7"
-  DTS:VersionGUID="{8D9AF1A6-8551-44BF-AC4D-56F99CA06265}">
+  DTS:VersionBuild="8"
+  DTS:VersionGUID="{948663A8-5901-4846-9B75-099B04E93CB8}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
-  <DTS:ConnectionManagers>
-    <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[DW]"
-      DTS:CreationName="OLEDB"
-      DTS:DTSID="{2A37A34E-04BA-4704-97B3-CA839FC7FDEA}"
-      DTS:ObjectName="DW">
-      <DTS:ObjectData>
-        <DTS:ConnectionManager
-          DTS:ConnectRetryCount="1"
-          DTS:ConnectRetryInterval="5"
-          DTS:ConnectionString="Data Source=.;Initial Catalog=WorkFlow;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
-      </DTS:ObjectData>
-    </DTS:ConnectionManager>
-  </DTS:ConnectionManagers>
   <DTS:Variables />
   <DTS:Executables>
     <DTS:Executable
@@ -84,8 +70,8 @@ SET IDENTITY_INSERT dim.Currency OFF</property>
               <connections>
                 <connection
                   refId="Package\dim Currency\dim Currency.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[DW]"
-                  connectionManagerRefId="Package.ConnectionManagers[DW]"
+                  connectionManagerID="{08D4C400-68C1-4CE8-A42C-408E9FAB0B5B}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[DW]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>
@@ -191,8 +177,8 @@ WHERE dim.CurrencyId IS NULL</property>
               <connections>
                 <connection
                   refId="Package\dim Currency\stage2 Currency.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[DW]"
-                  connectionManagerRefId="Package.ConnectionManagers[DW]"
+                  connectionManagerID="{08D4C400-68C1-4CE8-A42C-408E9FAB0B5B}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[DW]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>
@@ -424,8 +410,8 @@ WHEN NOT MATCHED
               <connections>
                 <connection
                   refId="Package\sales ExchangeRate\sales ExchangeRate.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[DW]"
-                  connectionManagerRefId="Package.ConnectionManagers[DW]"
+                  connectionManagerID="{08D4C400-68C1-4CE8-A42C-408E9FAB0B5B}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[DW]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>
@@ -544,8 +530,8 @@ WHERE sales.CurrencyId IS NULL
               <connections>
                 <connection
                   refId="Package\sales ExchangeRate\stage2 ExchangeRate.Connections[OleDbConnection]"
-                  connectionManagerID="Package.ConnectionManagers[DW]"
-                  connectionManagerRefId="Package.ConnectionManagers[DW]"
+                  connectionManagerID="{08D4C400-68C1-4CE8-A42C-408E9FAB0B5B}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[DW]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>
